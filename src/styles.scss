@@ -1,0 +1,12 @@
+* {
+  box-sizing: border-box;
+  border: 1px dashed gray;
+}
+
+.wrapper {
+    display: flex;
+}
+.inventory-grid{
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
