@@ -1,12 +1,83 @@
 * {
   box-sizing: border-box;
-  border: 1px dashed gray;
+  // border: 1px dashed gray;
 }
 
 .wrapper {
-    display: flex;
+  display: grid;
+  grid-template-columns: auto;
 }
-.inventory-grid{
+.title {
+  text-align: center;
+}
+.inventory {
+  display: grid;
+  grid-template-columns: max-content auto;
+  grid-column-gap: 30px;
+  margin-bottom: 20px;
+
+  &-grid,
+  &-box {
     display: grid;
-    grid-template-columns: auto auto auto;
+    border: 2px solid black;
+    &__cell {
+      border: 1px dashed aqua;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &-descr {
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
+
+  &-grid {
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows: 60px 60px 60px;
+  }
+  &-box {
+    grid-template-columns: repeat(6, 60px);
+    grid-template-rows: 60px 60px 60px;
+  }
+
+  &__item {
+    background-repeat: no-repeat;
+    width: 54px;
+    height: 54px;
+    background-size: cover;
+  }
+}
+.info-field {
+  &-item {
+    display: grid;
+    grid-template-columns: 60px auto;
+    &__name {
+      padding: 5px;
+      margin: 0;
+    }
+    &__value {
+      padding: 5px;
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+// Sprites
+.sword {
+  background-image: url("./assets/images/tile000.png");
+}
+.sword--silver {
+  background-image: url("./assets/images/tile001.png");
+}
+
+.helmet {
+  background-image: url("./assets/images/tile070.png");
+}
+
+.helmet--silver {
+  background-image: url("./assets/images/tile069.png");
 }

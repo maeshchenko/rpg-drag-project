@@ -10,22 +10,59 @@
   </head>
   <body>
     <div class="wrapper">
-      <div class="inventory-grid">
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
-        <div class="inventory-grid__item"></div>
+      <h1 class="title">INVENTORY BOX</h1>
+      <div class="inventory">
+        <div class="inventory-grid-wrapper">
+          <h3 class="inventory-grid-descr">You</h3>
+          <div class="inventory-grid">
+            <div class="inventory-grid__cell">
+              <div class="inventory__item sword"></div>
+            </div>
+            <div class="inventory-grid__cell" draggable="true">
+              <div class="inventory__item sword--silver" draggable="true"></div>
+            </div>
+            <div class="inventory-grid__cell"></div>
+            <div class="inventory-grid__cell"></div>
+            <div class="inventory-grid__cell"></div>
+            <div class="inventory-grid__cell"></div>
+            <div class="inventory-grid__cell"></div>
+            <div class="inventory-grid__cell"></div>
+            <div class="inventory-grid__cell"></div>
+          </div>
+        </div>
+        <div class="inventory-box-wrapper">
+          <h3 class="inventory-box-descr">Your inventory</h3>
+          <div class="inventory-box">
+            <div class="inventory-box__cell">
+              <div
+                class="inventory__item helmet--silver"
+                draggable="true"
+              ></div>
+            </div>
+            <div class="inventory-box__cell">
+              <div class="inventory__item helmet" draggable="true"></div>
+            </div>
+            <div class="inventory-box__cell"></div>
+            <div class="inventory-box__cell"></div>
+            <div class="inventory-box__cell"></div>
+          </div>
+        </div>
       </div>
       <div class="info-field">
-        <p><b>Health:</b>100Xp</p>
-        <p><b>Strenth:</b>100</p>
-        <p><b>Weight:</b>0/20</p>
+        <div class="info-field-item">
+          <p class="info-field-item__name">Health:</p>
+          <p class="info-field-item__value">100Xp</p>
+        </div>
+        <div class="info-field-item">
+          <p class="info-field-item__name">Strenth:</p>
+          <p class="info-field-item__value">100</p>
+        </div>
+        <div class="info-field-item">
+          <p class="info-field-item__name">Weight:</p>
+          <p class="info-field-item__value">0/20</p>
+        </div>
       </div>
     </div>
+    <button id="get-item">Get Item</button>
   </body>
 </html>
