@@ -10,7 +10,6 @@ const path = require("path");
 module.exports = {
   entry: "./src/index.ts",
   mode: "development",
-  devtool: "source-map",
   optimization: {
     usedExports: true,
   },
