@@ -1,23 +1,63 @@
 import "./styles.scss";
 
-enum Items {
-  Sword = "sword",
-  SwordSilver = "sword--silver",
-  Helmet = "helmet",
-  HelmetSilver = "helmet--silver",
+enum ItemsKinds {
+  Armor = "ARMOR",
+  Weapon = "WEAPON",
 }
 
-interface ItemDescription {
-  itemName: string;
+interface ItemDescr {
+  type: ItemsKinds;
   price: number;
+  strength?: number;
+  health?: number;
+  weight: number;
 }
+
+// interface ItemDict {
+//   [key: string]: ItemDescr;
+// }
+
+const itemsDict = {
+  sword: {
+    type: ItemsKinds.Weapon,
+    name: "Sword",
+    img: "./assets/images/tile000.png",
+    price: 100,
+    strength: 10,
+    weight: 1,
+  },
+  swordSilver: {
+    type: ItemsKinds.Weapon,
+    name: "Silver Sword",
+    img: "./assets/images/tile001.png",
+    price: 200,
+    strength: 20,
+    weight: 1,
+  },
+  helmet: {
+    type: ItemsKinds.Armor,
+    name: "Helmet",
+    img: "./assets/images/tile070.png",
+    price: 200,
+    weight: 1,
+    health: 10,
+  },
+  helmetSilver: {
+    type: ItemsKinds.Armor,
+    name: "Silver Helmet",
+    img: "./assets/images/tile069.png",
+    price: 200,
+    weight: 1,
+    health: 20,
+  },
+};
 
 interface StoreCharacters {
   [key: string]: StoreItem;
 }
 
 interface StoreItem {
-  items: ItemDescription[];
+  items: ItemDescr[];
   name: string;
 }
 
@@ -27,21 +67,11 @@ class Store {
   private constructor() {
     this.characters = {
       "1": {
-        items: [
-          {
-            itemName: Items.Helmet,
-            price: 10,
-          },
-        ],
+        items: [itemsDict.helmet, itemsDict.sword],
         name: "Misha",
       },
       "2": {
-        items: [
-          {
-            itemName: Items.Helmet,
-            price: 10,
-          },
-        ],
+        items: [itemsDict.helmetSilver, itemsDict.swordSilver],
         name: "Natasha",
       },
     };
@@ -60,19 +90,16 @@ class DrawInventory {
   constructor(private items: StoreItem) {
     console.log("Drawing items:", this.items);
   }
+  drawGrid() {
+    // const wrapper = document.getElementById("inventory-grid-wrapper");
+  }
 }
 
 class Inventory {
-  constructor(public store: Store = Store.getInstance()) {
-    console.log("Inventory class is initialized");
-  }
+  constructor(public store: Store = Store.getInstance()) {}
 
   open(id: string) {
     new DrawInventory(this.store.characters[id]);
-    console.log(
-      `Inventory is open. Items of ${id}: `,
-      this.store.characters[id]
-    );
   }
 }
 
