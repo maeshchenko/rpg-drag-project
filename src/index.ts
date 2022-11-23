@@ -63,6 +63,7 @@ interface StoreCharacters {
 
 interface StoreItem {
   items: ItemDescr[];
+  money: number;
   name: string;
 }
 
@@ -74,10 +75,12 @@ class Store {
     this.characters = {
       "1": {
         items: [itemsDict.helmet, itemsDict.helmet, itemsDict.sword],
+        money: 100,
         name: "Misha",
       },
       "2": {
         items: [itemsDict.helmetSilver, itemsDict.swordSilver],
+        money: 120,
         name: "Natasha",
       },
     };
@@ -104,11 +107,17 @@ class Store {
 class DrawInventory {
   stats = {
     health: 100,
+    money: 100,
     strength: 0,
     weight: 0,
-  };
+  }; // так не пойдет. Потому что разные могут быть начальные данные. Надо подтягивать данные из профиля игрока
+  // И это точно не то место, где нужно считать. Тут нужно отображать инфо, а не делать calculate
+  // его нужно делать при рендере персонажей, добавлении их на карту
+  // надо добавить отрисовку персонажей, а при клике на них - открывать окно с инфой
+  // canvas?
 
-  drawWindow(inventory: StoreItem, id: string) {
+  openInfoWindow(playerInfo: StoreItem, id: string) {
+    const { items, money, name } = playerInfo;
     this.resetStats();
 
     const inventoryBoxWrapper = document.getElementsByClassName("inventory")[0];
@@ -118,9 +127,7 @@ class DrawInventory {
 
     const titleParagraph = document.createElement("H3") as HTMLHeadingElement;
     titleParagraph.classList.add("inventory-title");
-    const titleText = document.createTextNode(
-      `${inventory.name}'s box`
-    ) as Text;
+    const titleText = document.createTextNode(`${name}'s box`) as Text;
     titleParagraph.appendChild(titleText);
     wrapper.appendChild(titleParagraph);
 
@@ -132,7 +139,7 @@ class DrawInventory {
     gridWrapper.classList.add("inventory-grid-wrapper");
     wrapper?.appendChild(gridWrapper);
 
-    inventory?.items.map((item) => {
+    items?.map((item) => {
       this.stats.weight += item.weight;
       this.stats.strength += item.strength || 0;
       this.stats.health += item.health || 0;
@@ -154,18 +161,19 @@ class DrawInventory {
     });
 
     const statsText = document.createTextNode(
-      `weight: ${this.stats.weight}, strength: ${this.stats.strength}, health: ${this.stats.health}`
+      `money: ${money}, weight: ${this.stats.weight}, strength: ${this.stats.strength}, health: ${this.stats.health}`
     ) as Text;
     statsParagraph.appendChild(statsText);
   }
 
-  removeWindow(id: string) {
+  closeInfoWindow(id: string) {
     const InventoryWindow = document.getElementById(`window-${id}`);
     InventoryWindow?.remove();
   }
 
   resetStats() {
     this.stats = {
+      money: 100,
       health: 100,
       strength: 0,
       weight: 0,
@@ -180,11 +188,11 @@ class Inventory {
   ) {}
 
   open(id: string) {
-    this.drawInstance.drawWindow(this.storeInstance.getItems(id), id);
+    this.drawInstance.openInfoWindow(this.storeInstance.getItems(id), id);
   }
 
   close(id: string) {
-    this.drawInstance.removeWindow(id);
+    this.drawInstance.closeInfoWindow(id);
   }
 }
 
