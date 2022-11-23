@@ -15,10 +15,6 @@ interface ItemDescr {
   weight: number;
 }
 
-// interface ItemDict {
-//   [key: string]: ItemDescr;
-// }
-
 const itemsDict = {
   sword: {
     type: ItemsKinds.Weapon,
