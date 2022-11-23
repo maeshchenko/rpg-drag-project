@@ -7,6 +7,8 @@ enum ItemsKinds {
 
 interface ItemDescr {
   type: ItemsKinds;
+  name: string;
+  img: string;
   price: number;
   strength?: number;
   health?: number;
@@ -67,7 +69,7 @@ class Store {
   private constructor() {
     this.characters = {
       "1": {
-        items: [itemsDict.helmet, itemsDict.sword],
+        items: [itemsDict.helmet, itemsDict.helmet, itemsDict.sword],
         name: "Misha",
       },
       "2": {
@@ -87,23 +89,54 @@ class Store {
 }
 
 class DrawInventory {
-  constructor(private items: StoreItem) {
-    console.log("Drawing items:", this.items);
+  gridWrapper: HTMLDivElement | null = null;
+
+  drawWindow(items: StoreItem, id: string) {
+    const inventoryWrapper = document.getElementsByClassName("inventory")[0];
+    this.gridWrapper = document.createElement("div");
+    this.gridWrapper.classList.add("inventory-grid-wrapper");
+    this.gridWrapper.setAttribute("id", `window-${id}`);
+    inventoryWrapper?.appendChild(this.gridWrapper);
+
+    items?.items.map((item) => {
+      const itemWrapper = document.createElement("div");
+      itemWrapper.classList.add("inventory-grid-cell");
+      this.gridWrapper?.append(itemWrapper);
+
+      const element = document.createElement("p") as HTMLParagraphElement;
+      element.classList.add("inventory-item-descr");
+      const text = document.createTextNode(item.name) as Text;
+      const img = document.createElement("img");
+      img.classList.add("inventory-item-img");
+
+      element.appendChild(text);
+      img.src = item.img;
+      itemWrapper.appendChild(img);
+      itemWrapper.appendChild(element);
+    });
   }
-  drawGrid() {
-    // const wrapper = document.getElementById("inventory-grid-wrapper");
+
+  removeWindow(id: string) {
+    const InventoryWindow = document.getElementById(`window-${id}`);
+
+    InventoryWindow?.remove();
   }
 }
 
 class Inventory {
-  constructor(public store: Store = Store.getInstance()) {}
+  constructor(
+    public storeInstance: Store = Store.getInstance(),
+    public drawInstance = new DrawInventory()
+  ) {}
 
   open(id: string) {
-    new DrawInventory(this.store.characters[id]);
+    this.drawInstance.drawWindow(this.storeInstance.characters[id], id);
+  }
+  close(id: string) {
+    this.drawInstance.removeWindow(id);
   }
 }
 
 const myInventory = new Inventory();
 myInventory.open("1");
 myInventory.open("2");
-myInventory.open("3");

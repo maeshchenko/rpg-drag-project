@@ -1,46 +1,52 @@
 * {
   box-sizing: border-box;
-  // border: 1px dashed gray;
 }
 
 .wrapper {
   display: grid;
   grid-template-columns: auto;
 }
+
 .title {
   text-align: center;
 }
+
 .inventory {
   display: grid;
-  grid-template-columns: max-content auto;
+  grid-template-columns: auto auto;
   grid-column-gap: 30px;
   margin-bottom: 20px;
 
-  &-grid,
-  &-box {
+  &-grid {
     display: grid;
     border: 2px solid black;
-    &__cell {
+    &-wrapper {
+      display: grid;
+      grid-template-columns: 128px 128px 128px;
+      grid-template-rows: 128px 128px 128px;
+      border: 1px solid #000;
+    }
+    &-cell {
       border: 1px dashed aqua;
-      width: 60px;
-      height: 60px;
+      width: 128px;
+      height: 128px;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    &-descr {
-      margin: 0 auto;
-      text-align: center;
+      flex-direction: column;
     }
   }
 
-  &-grid {
-    grid-template-columns: 60px 60px 60px;
-    grid-template-rows: 60px 60px 60px;
-  }
-  &-box {
-    grid-template-columns: repeat(3, 60px);
-    grid-template-rows: 60px 60px 60px;
+  &-item {
+    &-descr {
+      margin: 0 auto;
+      text-align: center;
+      font-size: 18px;
+    }
+    &-img {
+      width: 64px;
+      height: 64px;
+    }
   }
 
   &__item {
@@ -50,6 +56,7 @@
     background-size: cover;
   }
 }
+
 .info-field {
   &-item {
     display: grid;
