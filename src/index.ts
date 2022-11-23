@@ -15,7 +15,14 @@ interface ItemDescr {
   weight: number;
 }
 
-const itemsDict = {
+enum ItemsDictTypes {
+  sword = "sword",
+  swordSilver = "swordSilver",
+  helmet = "helmet",
+  helmetSilver = "helmetSilver",
+}
+
+const itemsDict: { [key in ItemsDictTypes]: ItemDescr } = {
   sword: {
     type: ItemsKinds.Weapon,
     name: "Sword",
@@ -177,8 +184,8 @@ myInventory.open("2");
 
 const store = Store.getInstance();
 setTimeout(() => {
-  store.addInventary("1", "helmet");
-  store.addInventary("1", "helmet");
+  store.addInventary("1", ItemsDictTypes.helmet);
+  store.addInventary("1", ItemsDictTypes.helmet);
   myInventory.close("1");
   myInventory.close("2");
   myInventory.open("1");
