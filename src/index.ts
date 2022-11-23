@@ -60,8 +60,9 @@ interface StoreItem {
 }
 
 class Store {
-  characters: StoreCharacters;
+  private characters: StoreCharacters;
   static instance: Store | null = null;
+
   private constructor() {
     this.characters = {
       "1": {
@@ -74,6 +75,7 @@ class Store {
       },
     };
   }
+
   static getInstance() {
     if (this.instance) {
       return this.instance;
@@ -82,22 +84,53 @@ class Store {
       return this.instance;
     }
   }
+
+  addInventary(playerId: string, itemName: keyof typeof itemsDict) {
+    this.characters[playerId].items.push(itemsDict[itemName]);
+  }
+
+  getItems(id: string) {
+    return this.characters[id];
+  }
 }
 
 class DrawInventory {
-  gridWrapper: HTMLDivElement | null = null;
+  stats = {
+    health: 100,
+    strength: 0,
+    weight: 0,
+  };
 
-  drawWindow(items: StoreItem, id: string) {
-    const inventoryWrapper = document.getElementsByClassName("inventory")[0];
-    this.gridWrapper = document.createElement("div");
-    this.gridWrapper.classList.add("inventory-grid-wrapper");
-    this.gridWrapper.setAttribute("id", `window-${id}`);
-    inventoryWrapper?.appendChild(this.gridWrapper);
+  drawWindow(inventory: StoreItem, id: string) {
+    const inventoryBoxWrapper = document.getElementsByClassName("inventory")[0];
+    const wrapper = document.createElement("div");
+    inventoryBoxWrapper.appendChild(wrapper);
+    wrapper.setAttribute("id", `window-${id}`);
 
-    items?.items.map((item) => {
+    const titleParagraph = document.createElement("H3") as HTMLHeadingElement;
+    titleParagraph.classList.add("inventory-title");
+    const titleText = document.createTextNode(
+      `${inventory.name}'s box`
+    ) as Text;
+    titleParagraph.appendChild(titleText);
+    wrapper.appendChild(titleParagraph);
+
+    const statsParagraph = document.createElement("H3") as HTMLHeadingElement;
+    statsParagraph.classList.add("inventory-title");
+    wrapper.appendChild(statsParagraph);
+
+    const gridWrapper = document.createElement("div");
+    gridWrapper.classList.add("inventory-grid-wrapper");
+    wrapper?.appendChild(gridWrapper);
+
+    inventory?.items.map((item) => {
+      this.stats.weight += item.weight;
+      this.stats.strength += item.strength || 0;
+      this.stats.health += item.health || 0;
+
       const itemWrapper = document.createElement("div");
       itemWrapper.classList.add("inventory-grid-cell");
-      this.gridWrapper?.append(itemWrapper);
+      gridWrapper?.append(itemWrapper);
 
       const element = document.createElement("p") as HTMLParagraphElement;
       element.classList.add("inventory-item-descr");
@@ -110,11 +143,15 @@ class DrawInventory {
       itemWrapper.appendChild(img);
       itemWrapper.appendChild(element);
     });
+
+    const statsText = document.createTextNode(
+      `weight: ${this.stats.weight}, strength: ${this.stats.strength}, health: ${this.stats.health}`
+    ) as Text;
+    statsParagraph.appendChild(statsText);
   }
 
   removeWindow(id: string) {
     const InventoryWindow = document.getElementById(`window-${id}`);
-
     InventoryWindow?.remove();
   }
 }
@@ -126,8 +163,9 @@ class Inventory {
   ) {}
 
   open(id: string) {
-    this.drawInstance.drawWindow(this.storeInstance.characters[id], id);
+    this.drawInstance.drawWindow(this.storeInstance.getItems(id), id);
   }
+
   close(id: string) {
     this.drawInstance.removeWindow(id);
   }
@@ -136,3 +174,13 @@ class Inventory {
 const myInventory = new Inventory();
 myInventory.open("1");
 myInventory.open("2");
+
+const store = Store.getInstance();
+setTimeout(() => {
+  store.addInventary("1", "helmet");
+  store.addInventary("1", "helmet");
+  myInventory.close("1");
+  myInventory.close("2");
+  myInventory.open("1");
+  myInventory.open("2");
+}, 2000);

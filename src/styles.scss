@@ -14,8 +14,13 @@
 .inventory {
   display: grid;
   grid-template-columns: auto auto;
-  grid-column-gap: 30px;
+  grid-gap: 30px;
   margin-bottom: 20px;
+  &-title {
+    text-align: center;
+    margin: 0 auto;
+    font-size: 20px;
+  }
 
   &-grid {
     display: grid;
@@ -25,6 +30,7 @@
       grid-template-columns: 128px 128px 128px;
       grid-template-rows: 128px 128px 128px;
       border: 1px solid #000;
+      grid-gap: 15px;
     }
     &-cell {
       border: 1px dashed aqua;
@@ -55,36 +61,4 @@
     height: 54px;
     background-size: cover;
   }
-}
-
-.info-field {
-  &-item {
-    display: grid;
-    grid-template-columns: 60px auto;
-    &__name {
-      padding: 5px;
-      margin: 0;
-    }
-    &__value {
-      padding: 5px;
-      width: 100%;
-      margin: 0;
-    }
-  }
-}
-
-// Sprites
-.sword {
-  background-image: url("./assets/images/tile000.png");
-}
-.sword--silver {
-  background-image: url("./assets/images/tile001.png");
-}
-
-.helmet {
-  background-image: url("./assets/images/tile070.png");
-}
-
-.helmet--silver {
-  background-image: url("./assets/images/tile069.png");
 }
