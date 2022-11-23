@@ -109,6 +109,8 @@ class DrawInventory {
   };
 
   drawWindow(inventory: StoreItem, id: string) {
+    this.resetStats();
+
     const inventoryBoxWrapper = document.getElementsByClassName("inventory")[0];
     const wrapper = document.createElement("div");
     inventoryBoxWrapper.appendChild(wrapper);
@@ -160,6 +162,14 @@ class DrawInventory {
   removeWindow(id: string) {
     const InventoryWindow = document.getElementById(`window-${id}`);
     InventoryWindow?.remove();
+  }
+
+  resetStats() {
+    this.stats = {
+      health: 100,
+      strength: 0,
+      weight: 0,
+    };
   }
 }
 
