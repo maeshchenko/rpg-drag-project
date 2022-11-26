@@ -1,27 +1,36 @@
-import { Inventory } from "./components/inventory/inventory";
+// import { Inventory } from "./components/inventory/inventory";
 import "./styles.scss";
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
-const ballArr = [] as Ball[];
 const BG_COLOR = "#282828";
+const BORDER_COLOR = "#000000";
+const BORDER_SIZE = 10;
+
+const PLAYER_COLOR = "#9ccc9c";
+const SELLER_COLOR = "#2b5329";
 
 window.onload = init;
+
+let player: Player;
+let seller: Player;
 
 function init() {
   canvas = document.getElementById("canvas") as HTMLCanvasElement;
   ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-  ctx.fillStyle = BG_COLOR;
+  ctx.fillStyle = BORDER_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < 500; i++) {
-    ballArr[i] = new Ball(
-      canvas.width / 2 + i * 20,
-      canvas.height,
-      i * 25 + 3,
-      -i * 25 + 3
-    );
-  }
+  ctx.fillStyle = BG_COLOR;
+  ctx.fillRect(
+    BORDER_SIZE,
+    BORDER_SIZE,
+    canvas.width - BORDER_SIZE * 2,
+    canvas.height - BORDER_SIZE * 2
+  );
+
+  player = new Player(PLAYER_COLOR);
+  seller = new Seller(SELLER_COLOR);
 
   // Start the first frame request
   window.requestAnimationFrame(gameLoop);
@@ -35,55 +44,98 @@ function gameLoop() {
   window.requestAnimationFrame(gameLoop);
 }
 
-class Ball {
-  dx = 2;
-  dy = -2;
-  constructor(
-    protected x: number,
-    protected y: number,
-    dx?: number,
-    dy?: number
-  ) {
-    if (dx) {
-      this.dx = dx;
-    }
-    if (dy) {
-      this.dy = dy;
-    }
-  }
-  drawBall() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, 1, 0, Math.PI * 2);
-    ctx.fillStyle = "#66FF66";
-    ctx.fill();
-    ctx.closePath();
-  }
-  move() {
-    this.drawBall();
-    if (this.x > canvas.width || this.x < 0) {
-      this.dx = this.dx * -1;
-    }
-    if (this.y > canvas.height || this.y < 0) {
-      this.dy = this.dy * -1;
-    }
-    this.x += this.dx;
-    this.y += this.dy;
-    console.log(Math.sin(this.x));
-  }
-}
-
 function draw() {
-  ballArr.forEach((ball) => ball.move());
+  // console.log("drawing");
+
+  player.draw();
+  seller.draw();
 }
 
 function clear() {
-  console.log(BG_COLOR);
-
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // ctx.fillStyle = BG_COLOR;
-  // ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // console.log("clearing");
+  ctx.fillStyle = BG_COLOR;
+  ctx.fillRect(
+    BORDER_SIZE,
+    BORDER_SIZE,
+    canvas.width - BORDER_SIZE * 2,
+    canvas.height - BORDER_SIZE * 2
+  );
 }
 
-const myInventory = new Inventory();
-myInventory.open("1");
-myInventory.open("2");
+class Person {
+  constructor(
+    private color: string,
+    private xCoord: number,
+    private yCoord: number,
+    private sizeX = 20,
+    private sizeY = 30
+  ) {
+    console.log("Person class is initiated");
+    console.log("My color is: ", this.color);
+  }
+  getCoord() {
+    return { x: this.xCoord, y: this.yCoord };
+  }
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.xCoord, this.yCoord, this.sizeX, this.sizeY);
+  }
+  moveX(dx: number) {
+    if (
+      this.xCoord + dx < canvas.width - BORDER_SIZE * 2 - this.sizeX / 2 &&
+      this.xCoord + dx > BORDER_SIZE
+    ) {
+      this.xCoord += dx;
+    }
+  }
+  moveY(dy: number) {
+    if (
+      this.yCoord + dy < canvas.height - BORDER_SIZE * 2 - this.sizeY / 2 &&
+      this.yCoord + dy > BORDER_SIZE
+    ) {
+      this.yCoord += dy;
+    }
+  }
+  moveUp() {
+    this.moveY(-10);
+  }
+  moveDown() {
+    this.moveY(10);
+  }
+  moveLeft() {
+    this.moveX(-10);
+  }
+  moveRight() {
+    this.moveX(10);
+  }
+}
+
+class Player extends Person {
+  constructor(color: string) {
+    super(color, canvas.width / 2, canvas.height - BORDER_SIZE * 2 - 20);
+    console.log("Player is initiated.");
+  }
+}
+
+class Seller extends Person {
+  constructor(color: string) {
+    super(color, BORDER_SIZE, BORDER_SIZE);
+    console.log("Seller is initiated.");
+  }
+}
+
+document.addEventListener("keypress", (e: KeyboardEvent) => {
+  console.log(e.code);
+  if (e.code === "KeyW") {
+    player.moveUp();
+  }
+  if (e.code === "KeyS") {
+    player.moveDown();
+  }
+  if (e.code === "KeyA") {
+    player.moveLeft();
+  }
+  if (e.code === "KeyD") {
+    player.moveRight();
+  }
+});
