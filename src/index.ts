@@ -69,10 +69,7 @@ class Person {
     private yCoord: number,
     private sizeX = 20,
     private sizeY = 30
-  ) {
-    console.log("Person class is initiated");
-    console.log("My color is: ", this.color);
-  }
+  ) {}
   getCoord() {
     return { x: this.xCoord, y: this.yCoord };
   }
@@ -113,14 +110,12 @@ class Person {
 class Player extends Person {
   constructor(color: string) {
     super(color, canvas.width / 2, canvas.height - BORDER_SIZE * 2 - 20);
-    console.log("Player is initiated.");
   }
 }
 
 class Seller extends Person {
   constructor(color: string) {
     super(color, BORDER_SIZE, BORDER_SIZE);
-    console.log("Seller is initiated.");
   }
 }
 
