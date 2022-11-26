@@ -7,8 +7,8 @@ const BG_COLOR = "#282828";
 const BORDER_COLOR = "#000000";
 const BORDER_SIZE = 10;
 
-const PLAYER_COLOR = "#9ccc9c";
-const SELLER_COLOR = "#2b5329";
+const PLAYER_COLOR = "#66FF66";
+const SELLER_COLOR = "#FFB000";
 
 window.onload = init;
 
@@ -45,14 +45,14 @@ function gameLoop() {
 }
 
 function draw() {
-  // console.log("drawing");
-
+  ctx.font = "48px Joustix";
+  ctx.fillStyle = PLAYER_COLOR;
+  ctx.fillText("Ready PLAYER 1", 270, 270);
   player.draw();
   seller.draw();
 }
 
 function clear() {
-  // console.log("clearing");
   ctx.fillStyle = BG_COLOR;
   ctx.fillRect(
     BORDER_SIZE,
@@ -120,7 +120,6 @@ class Seller extends Person {
 }
 
 document.addEventListener("keypress", (e: KeyboardEvent) => {
-  console.log(e.code);
   if (e.code === "KeyW") {
     player.moveUp();
   }
