@@ -1,4 +1,0 @@
-*{box-sizing:border-box}.wrapper{display:grid;grid-template-columns:auto}.title{text-align:center}.inventory{display:grid;grid-template-columns:auto auto;grid-gap:30px;margin-bottom:20px}.inventory-title{text-align:center;margin:0 auto;font-size:20px}.inventory-grid{display:grid;border:2px solid black}.inventory-grid-wrapper{display:grid;grid-template-columns:128px 128px 128px;grid-template-rows:128px 128px 128px;border:1px solid #000;grid-gap:15px}.inventory-grid-cell{border:1px dashed aqua;width:128px;height:128px;display:flex;align-items:center;justify-content:center;flex-direction:column}.inventory-item-descr{margin:0 auto;text-align:center;font-size:18px}.inventory-item-img{width:64px;height:64px}.inventory__item{background-repeat:no-repeat;width:54px;height:54px;background-size:cover}
-
-
-/*# sourceMappingURL=style.css.map*/
