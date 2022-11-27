@@ -278,7 +278,7 @@ class Seller extends Person {
         clearInterval(speakingTimer);
         speakingPhraseIndex = 0;
       }
-    }, 200);
+    }, 100);
   }
 }
 
