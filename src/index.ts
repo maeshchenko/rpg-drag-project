@@ -47,7 +47,7 @@ function gameLoop() {
 function draw() {
   ctx.font = "48px Joustix";
   ctx.fillStyle = PLAYER_COLOR;
-  ctx.fillText("ПРИВЕТ НАТАШЕ ОТ МИШИ", 100, 270);
+  ctx.fillText("Ready PLAYER 1", 270, 270);
   player.draw();
   seller.draw();
 }
