@@ -36,8 +36,8 @@ function init() {
     canvas.height - BORDER_SIZE * 2
   );
 
-  player = new Player();
   seller = new Seller();
+  player = new Player();
 
   new Promise((res) =>
     setTimeout(() => {
@@ -70,8 +70,8 @@ function gameLoop() {
 
 function draw() {
   drawText();
-  player.draw();
   seller.draw();
+  player.draw();
   if (storeInstance.checkCollisions() || isDrawHeart) {
     drawHeart();
   }
@@ -118,7 +118,8 @@ class Person {
   width = 0;
   height = 0;
   name = "";
-  frame = 0;
+  playerFrame = 0;
+  sellerFrame = 0;
   constructor(
     private playerId: number,
     private color: string,
@@ -131,25 +132,49 @@ class Person {
     this.yCoord = y;
     this.width = w;
     this.height = h;
+    this.changeSellerFrame();
+  }
+  changeSellerFrame() {
+    setTimeout(() => {
+      this.sellerFrame = this.sellerFrame === 0 ? 1 : 0;
+      // Again
+      this.changeSellerFrame();
+
+      // Every 3 sec
+    }, 1000);
   }
   getCoord() {
     return { x: this.xCoord, y: this.yCoord };
   }
   draw() {
-    if (!isRealisticMode || this.playerId !== 1) {
+    if (!isRealisticMode) {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
       this.addTextName();
     } else {
-      const player_image = new Image();
-      player_image.src = `assets/images/player_${this.frame}.png`;
-      ctx.drawImage(
-        player_image,
-        this.xCoord,
-        this.yCoord,
-        this.width + 60,
-        this.height + 60
-      );
+      if (this.playerId === 1) {
+        const player_image = new Image();
+        player_image.src = `assets/images/player_${this.playerFrame}.png`;
+        ctx.drawImage(
+          player_image,
+          this.xCoord,
+          this.yCoord - 100,
+          this.width + 60,
+          this.height + 60
+        );
+      } else {
+        if (this.playerId === 2) {
+          const seller_image = new Image();
+          seller_image.src = `assets/images/seller_${this.sellerFrame}.png`;
+          ctx.drawImage(
+            seller_image,
+            this.xCoord,
+            this.yCoord,
+            this.width + 60,
+            this.height + 60
+          );
+        }
+      }
     }
   }
   addTextName() {
@@ -176,10 +201,10 @@ class Person {
     ) {
       this.yCoord += dy;
       this.updateCoord();
-      if (this.frame === 3) {
-        this.frame = 0;
+      if (this.playerFrame === 3) {
+        this.playerFrame = 0;
       } else {
-        this.frame++;
+        this.playerFrame++;
       }
     }
   }
@@ -232,16 +257,23 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
     isRealisticMode = true;
     BG_COLOR = "#807e7e";
 
-    new Promise((res) =>
-    setTimeout(() => {
-      initialText = "Realistic mode: on";
-      res("ok!");
-    }, 2000)
-  )
-    .then(() => {
+    new Promise((res) => {
+      setTimeout(() => {
+        initialText = "Realistic mode: on";
+        res("ok!");
+      }, 1500);
+      setTimeout(() => {
+        initialText = "";
+        res("ok!");
+      }, 500);
+      setTimeout(() => {
+        initialText = "Realistic mode: on";
+        res("ok!");
+      }, 1500);
+    }).then(() => {
       setTimeout(() => {
         initialText = "";
       }, 2000);
-    })
+    });
   }
 });
