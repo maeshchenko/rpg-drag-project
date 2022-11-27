@@ -71,10 +71,10 @@ function gameLoop() {
 function draw() {
   drawText();
   seller.draw();
-  player.draw();
   if (storeInstance.checkCollisions() || isDrawHeart) {
     drawHeart();
   }
+  player.draw();
   if (storeInstance.checkCollisions()) {
     if (isTradingEnable != true) {
       isTradingEnable = true;
@@ -109,9 +109,9 @@ function drawText() {
 function drawHeart() {
   const heart_image = new Image();
   heart_image.src = "assets/images/heart.png";
-  if(!isRealisticMode){
+  if (!isRealisticMode) {
     ctx.drawImage(heart_image, 30, 30, 25, 25);
-  }else{
+  } else {
     ctx.drawImage(heart_image, 80, 70, 25, 25);
   }
 }
@@ -140,12 +140,16 @@ class Person {
   }
   changeSellerFrame() {
     setTimeout(() => {
-      this.sellerFrame = this.sellerFrame === 0 ? 1 : 0;
+      if (this.sellerFrame === 3) {
+        this.sellerFrame = 0;
+      } else {
+        this.sellerFrame++;
+      }
       // Again
       this.changeSellerFrame();
 
       // Every 3 sec
-    }, 1000);
+    }, 300);
   }
   getCoord() {
     return { x: this.xCoord, y: this.yCoord };
@@ -236,7 +240,7 @@ class Seller extends Person {
   draw() {
     if (isRealisticMode) {
       const seller_image = new Image();
-      seller_image.src = `assets/images/seller_${this.sellerFrame}.png`;
+      seller_image.src = `assets/images/sellerBest_${this.sellerFrame}.png`;
       ctx.drawImage(
         seller_image,
         this.xCoord,
@@ -252,9 +256,9 @@ class Seller extends Person {
   }
   playText() {
     console.log("YEAP!");
-    ctx.font = "40px Joustix";
+    ctx.font = "18px Joustix";
     ctx.fillStyle = PLAYER_COLOR;
-    ctx.fillText("ПРИВЕТ, СТРАННИК", 160, 160);
+    ctx.fillText("ПРИВЕТ, СТРАННИК", 70, 70);
   }
 }
 
@@ -281,24 +285,22 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
     isRealisticMode = true;
     BG_COLOR = "#807e7e";
 
-    new Promise((res) => {
-      setTimeout(() => {
-        initialText = "Realistic mode: on";
-        res("ok!");
-      }, 1500);
-      setTimeout(() => {
-        initialText = "";
-        res("ok!");
-      }, 500);
-      setTimeout(() => {
-        initialText = "Realistic mode: on";
-        res("ok!");
-      }, 1500);
-    }).then(() => {
-      setTimeout(() => {
-        initialText = "";
-      }, 2000);
-    });
+    initialText = "Realistic mode: on";
+    setTimeout(function () {
+      initialText = "";
+    }, 500);
+    setTimeout(function () {
+      initialText = "Realistic mode: on";
+    }, 1000);
+    setTimeout(function () {
+      initialText = "";
+    }, 1500);
+    setTimeout(function () {
+      initialText = "Realistic mode: on";
+    }, 2000);
+    setTimeout(function () {
+      initialText = "";
+    }, 2500);
   }
   if (e.code === "KeyX") {
     seller.playText();
