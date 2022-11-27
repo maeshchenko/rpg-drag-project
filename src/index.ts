@@ -231,5 +231,17 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
   if (e.code === "KeyZ") {
     isRealisticMode = true;
     BG_COLOR = "#807e7e";
+
+    new Promise((res) =>
+    setTimeout(() => {
+      initialText = "Realistic mode: on";
+      res("ok!");
+    }, 2000)
+  )
+    .then(() => {
+      setTimeout(() => {
+        initialText = "";
+      }, 2000);
+    })
   }
 });
