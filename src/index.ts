@@ -19,6 +19,8 @@ let isDrawHeart = false;
 let initialText = "READY PLAYER 1";
 let isTradingEnable = false;
 let isRealisticMode = false;
+let speakingPhrase = "";
+let speakingPhraseIndex = 0;
 
 const storeInstance = Store.getInstance();
 
@@ -234,6 +236,8 @@ class Player extends Person {
 }
 
 class Seller extends Person {
+  isSpeaking = false;
+  speakingPhrase = "";
   constructor() {
     super(2, SELLER_COLOR);
   }
@@ -248,6 +252,9 @@ class Seller extends Person {
         this.width + 60,
         this.height + 60
       );
+      if (this.isSpeaking) {
+        this.playText();
+      }
     } else {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
@@ -256,13 +263,27 @@ class Seller extends Person {
   }
   playText() {
     console.log("YEAP!");
-    ctx.font = "18px Joustix";
+    ctx.font = "14px Joustix";
     ctx.fillStyle = PLAYER_COLOR;
-    ctx.fillText("ПРИВЕТ, СТРАННИК", 70, 70);
+    ctx.fillText(speakingPhrase, 90, 65);
+  }
+  speaking(speakingParamFull: string) {
+    this.isSpeaking = true;
+    const speakingPhraseArr = speakingParamFull.split("");
+
+    const speakingTimer = setInterval(function () {
+      speakingPhrase += speakingPhraseArr[speakingPhraseIndex];
+      speakingPhraseIndex++;
+      if (speakingPhraseIndex >= speakingPhraseArr.length) {
+        clearInterval(speakingTimer);
+        speakingPhraseIndex = 0;
+      }
+    }, 200);
   }
 }
 
 document.addEventListener("keypress", (e: KeyboardEvent) => {
+  console.log(e);
   if (e.code === "KeyW") {
     player.moveUp();
   }
@@ -302,7 +323,18 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
       initialText = "";
     }, 2500);
   }
-  if (e.code === "KeyX") {
-    seller.playText();
+  if (e.code === "Digit1") {
+    seller.speaking("Привет,странник!");
+  }
+  if (e.code === "Digit2") {
+    speakingPhrase = "";
+    seller.speaking("Давно не виделись");
+  }
+  if (e.code === "Digit3") {
+    speakingPhrase = "";
+    seller.speaking("Что привело тебя ко мне?");
+  }
+  if (e.code === "Digit0") {
+    speakingPhrase = "";
   }
 });
