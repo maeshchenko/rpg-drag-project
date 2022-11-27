@@ -1,4 +1,5 @@
 // import { Inventory } from "./components/inventory/inventory";
+import { Store } from "./store/store";
 import "./styles.scss";
 
 let canvas: HTMLCanvasElement;
@@ -14,6 +15,7 @@ window.onload = init;
 
 let player: Player;
 let seller: Player;
+// const storeInstance = Store.getInstance();
 
 function init() {
   canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -29,8 +31,8 @@ function init() {
     canvas.height - BORDER_SIZE * 2
   );
 
-  player = new Player(PLAYER_COLOR);
-  seller = new Seller(SELLER_COLOR);
+  player = new Player();
+  seller = new Seller();
 
   // Start the first frame request
   window.requestAnimationFrame(gameLoop);
@@ -45,9 +47,7 @@ function gameLoop() {
 }
 
 function draw() {
-  ctx.font = "48px Joustix";
-  ctx.fillStyle = PLAYER_COLOR;
-  ctx.fillText("Ready PLAYER 1", 270, 270);
+  drawText();
   player.draw();
   seller.draw();
 }
@@ -62,35 +62,63 @@ function clear() {
   );
 }
 
+function drawText() {
+  ctx.font = "48px Joustix";
+  ctx.fillStyle = PLAYER_COLOR;
+  ctx.fillText("Ready PLAYER 1", 270, 270);
+}
+
 class Person {
+  xCoord = 0;
+  yCoord = 0;
+  width = 0;
+  height = 0;
+  name = "";
   constructor(
+    private playerId: number,
     private color: string,
-    private xCoord: number,
-    private yCoord: number,
-    private sizeX = 20,
-    private sizeY = 30
-  ) {}
+    protected storeInstance = Store.getInstance()
+  ) {
+    const { x, y } = storeInstance.getItems(playerId).coords;
+    const { w, h } = storeInstance.getItems(playerId).size;
+    this.name = storeInstance.getItems(playerId).name;
+    this.xCoord = x;
+    this.yCoord = y;
+    this.width = w;
+    this.height = h;
+  }
   getCoord() {
     return { x: this.xCoord, y: this.yCoord };
   }
   draw() {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.xCoord, this.yCoord, this.sizeX, this.sizeY);
+    ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
+    this.addTextName();
+  }
+  addTextName() {
+    ctx.font = "10px Joustix";
+    ctx.fillStyle = PLAYER_COLOR;
+    ctx.fillText(this.name, this.xCoord - 6, this.yCoord - 4);
+  }
+  updateCoord() {
+    this.storeInstance.updateCoords(this.playerId, this.xCoord, this.yCoord);
   }
   moveX(dx: number) {
     if (
-      this.xCoord + dx < canvas.width - BORDER_SIZE * 2 - this.sizeX / 2 &&
+      this.xCoord + dx < canvas.width - BORDER_SIZE * 2 - this.width / 2 &&
       this.xCoord + dx > BORDER_SIZE
     ) {
       this.xCoord += dx;
+      this.updateCoord();
     }
   }
   moveY(dy: number) {
     if (
-      this.yCoord + dy < canvas.height - BORDER_SIZE * 2 - this.sizeY / 2 &&
+      this.yCoord + dy < canvas.height - BORDER_SIZE * 2 - this.height / 2 &&
       this.yCoord + dy > BORDER_SIZE
     ) {
       this.yCoord += dy;
+      this.updateCoord();
     }
   }
   moveUp() {
@@ -108,14 +136,14 @@ class Person {
 }
 
 class Player extends Person {
-  constructor(color: string) {
-    super(color, canvas.width / 2, canvas.height - BORDER_SIZE * 2 - 20);
+  constructor() {
+    super(1, PLAYER_COLOR);
   }
 }
 
 class Seller extends Person {
-  constructor(color: string) {
-    super(color, BORDER_SIZE, BORDER_SIZE);
+  constructor() {
+    super(2, SELLER_COLOR);
   }
 }
 

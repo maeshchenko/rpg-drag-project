@@ -12,7 +12,7 @@ export class DrawInventory {
   // надо добавить отрисовку персонажей, а при клике на них - открывать окно с инфой
   // canvas?
 
-  openInfoWindow(playerInfo: StoreItem, id: string) {
+  openInfoWindow(playerInfo: StoreItem, id: number) {
     const { items, money, name } = playerInfo;
     this.resetStats();
 
@@ -62,7 +62,7 @@ export class DrawInventory {
     statsParagraph.appendChild(statsText);
   }
 
-  closeInfoWindow(id: string) {
+  closeInfoWindow(id: number) {
     const InventoryWindow = document.getElementById(`window-${id}`);
     InventoryWindow?.remove();
   }

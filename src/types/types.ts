@@ -25,6 +25,8 @@ export interface StoreCharacters {
 }
 
 export interface StoreItem {
+  coords: { x: number; y: number };
+  size: { w: number; h: number };
   items: ItemDescr[];
   money: number;
   name: string;

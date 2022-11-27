@@ -7,11 +7,11 @@ export class Inventory {
     public drawInstance = new DrawInventory()
   ) {}
 
-  open(id: string) {
+  open(id: number) {
     this.drawInstance.openInfoWindow(this.storeInstance.getItems(id), id);
   }
 
-  close(id: string) {
+  close(id: number) {
     this.drawInstance.closeInfoWindow(id);
   }
 }
