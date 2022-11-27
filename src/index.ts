@@ -4,7 +4,7 @@ import "./styles.scss";
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
-const BG_COLOR = "#282828";
+let BG_COLOR = "#282828";
 const BORDER_COLOR = "#000000";
 const BORDER_SIZE = 10;
 
@@ -230,5 +230,6 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
   }
   if (e.code === "KeyZ") {
     isRealisticMode = true;
+    BG_COLOR = "#807e7e";
   }
 });
