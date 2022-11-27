@@ -14,7 +14,7 @@ const SELLER_COLOR = "#FFB000";
 window.onload = init;
 
 let player: Player;
-let seller: Player;
+let seller: Seller;
 let isDrawHeart = false;
 let initialText = "READY PLAYER 1";
 let isTradingEnable = false;
@@ -109,7 +109,11 @@ function drawText() {
 function drawHeart() {
   const heart_image = new Image();
   heart_image.src = "assets/images/heart.png";
-  ctx.drawImage(heart_image, 30, 30, 25, 25);
+  if(!isRealisticMode){
+    ctx.drawImage(heart_image, 30, 30, 25, 25);
+  }else{
+    ctx.drawImage(heart_image, 80, 70, 25, 25);
+  }
 }
 
 class Person {
@@ -121,8 +125,8 @@ class Person {
   playerFrame = 0;
   sellerFrame = 0;
   constructor(
-    private playerId: number,
-    private color: string,
+    protected playerId: number,
+    protected color: string,
     protected storeInstance = Store.getInstance()
   ) {
     const { x, y } = storeInstance.getItems(playerId).coords;
@@ -153,27 +157,7 @@ class Person {
       this.addTextName();
     } else {
       if (this.playerId === 1) {
-        const player_image = new Image();
-        player_image.src = `assets/images/player_${this.playerFrame}.png`;
-        ctx.drawImage(
-          player_image,
-          this.xCoord,
-          this.yCoord - 100,
-          this.width + 60,
-          this.height + 60
-        );
       } else {
-        if (this.playerId === 2) {
-          const seller_image = new Image();
-          seller_image.src = `assets/images/seller_${this.sellerFrame}.png`;
-          ctx.drawImage(
-            seller_image,
-            this.xCoord,
-            this.yCoord,
-            this.width + 60,
-            this.height + 60
-          );
-        }
       }
     }
   }
@@ -226,11 +210,51 @@ class Player extends Person {
   constructor() {
     super(1, PLAYER_COLOR);
   }
+  draw() {
+    if (isRealisticMode) {
+      const player_image = new Image();
+      player_image.src = `assets/images/player_${this.playerFrame}.png`;
+      ctx.drawImage(
+        player_image,
+        this.xCoord,
+        this.yCoord - 100,
+        this.width + 60,
+        this.height + 60
+      );
+    } else {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
+      this.addTextName();
+    }
+  }
 }
 
 class Seller extends Person {
   constructor() {
     super(2, SELLER_COLOR);
+  }
+  draw() {
+    if (isRealisticMode) {
+      const seller_image = new Image();
+      seller_image.src = `assets/images/seller_${this.sellerFrame}.png`;
+      ctx.drawImage(
+        seller_image,
+        this.xCoord,
+        this.yCoord,
+        this.width + 60,
+        this.height + 60
+      );
+    } else {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
+      this.addTextName();
+    }
+  }
+  playText() {
+    console.log("YEAP!");
+    ctx.font = "40px Joustix";
+    ctx.fillStyle = PLAYER_COLOR;
+    ctx.fillText("ПРИВЕТ, СТРАННИК", 160, 160);
   }
 }
 
@@ -275,5 +299,8 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
         initialText = "";
       }, 2000);
     });
+  }
+  if (e.code === "KeyX") {
+    seller.playText();
   }
 });
