@@ -213,6 +213,7 @@ class Person {
 }
 
 class Player extends Person {
+  isSpeaking = false;
   constructor() {
     super(1, PLAYER_COLOR);
   }
@@ -227,24 +228,49 @@ class Player extends Person {
         this.width + 60,
         this.height + 60
       );
+      if (this.isSpeaking) {
+        this.playText();
+      }
     } else {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
       this.addTextName();
     }
   }
+  playText() {
+    console.log("YEAP!");
+    ctx.font = "14px Joustix";
+    ctx.fillStyle = PLAYER_COLOR;
+    ctx.fillText(speakingPhrase, this.xCoord + 80, this.yCoord - 70);
+  }
+  speaking(speakingParamFull: string) {
+    this.isSpeaking = true;
+    const speakingPhraseArr = speakingParamFull.split("");
+
+    const speakingTimer = setInterval(function () {
+      speakingPhrase += speakingPhraseArr[speakingPhraseIndex];
+      speakingPhraseIndex++;
+      if (speakingPhraseIndex >= speakingPhraseArr.length) {
+        clearInterval(speakingTimer);
+        speakingPhraseIndex = 0;
+      }
+    }, 100);
+  }
 }
 
 class Seller extends Person {
   isSpeaking = false;
   speakingPhrase = "";
+  isCensor = true;
   constructor() {
     super(2, SELLER_COLOR);
   }
   draw() {
     if (isRealisticMode) {
       const seller_image = new Image();
-      seller_image.src = `assets/images/sellerBest_${this.sellerFrame}.png`;
+      seller_image.src = `assets/images/seller${this.isCensor ? "" : "Best"}_${
+        this.sellerFrame
+      }.png`;
       ctx.drawImage(
         seller_image,
         this.xCoord,
@@ -302,6 +328,9 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
   if (e.code === "KeyJ") {
     isDrawHeart = false;
   }
+  if (e.code === "KeyX") {
+    seller.isCensor = !seller.isCensor;
+  }
   if (e.code === "KeyZ") {
     isRealisticMode = true;
     BG_COLOR = "#807e7e";
@@ -324,17 +353,33 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
     }, 2500);
   }
   if (e.code === "Digit1") {
+    speakingPhrase = "";
+    player.isSpeaking = false;
     seller.speaking("Привет,странник!");
   }
   if (e.code === "Digit2") {
     speakingPhrase = "";
+    player.isSpeaking = false;
     seller.speaking("Давно не виделись");
   }
   if (e.code === "Digit3") {
     speakingPhrase = "";
+    player.isSpeaking = false;
     seller.speaking("Что привело тебя ко мне?");
+  }
+  if (e.code === "Digit4") {
+    speakingPhrase = "";
+    seller.isSpeaking = false;
+    player.speaking("Развлечься бы");
+  }
+  if (e.code === "Digit5") {
+    speakingPhrase = "";
+    player.isSpeaking = false;
+    seller.speaking("...");
   }
   if (e.code === "Digit0") {
     speakingPhrase = "";
+    seller.isSpeaking = false;
+    player.isSpeaking = false;
   }
 });
