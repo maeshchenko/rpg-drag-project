@@ -15,7 +15,8 @@ window.onload = init;
 
 let player: Player;
 let seller: Player;
-// const storeInstance = Store.getInstance();
+let isDrawHeart = false;
+const storeInstance = Store.getInstance();
 
 function init() {
   canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -50,6 +51,9 @@ function draw() {
   drawText();
   player.draw();
   seller.draw();
+  if (storeInstance.checkCollisions() || isDrawHeart) {
+    drawHeart();
+  }
 }
 
 function clear() {
@@ -66,6 +70,12 @@ function drawText() {
   ctx.font = "48px Joustix";
   ctx.fillStyle = PLAYER_COLOR;
   ctx.fillText("Ready PLAYER 1", 270, 270);
+}
+
+function drawHeart() {
+  const base_image = new Image();
+  base_image.src = "assets/images/heart.png";
+  ctx.drawImage(base_image, 30, 30, 25, 25);
 }
 
 class Person {
@@ -98,7 +108,7 @@ class Person {
   addTextName() {
     ctx.font = "10px Joustix";
     ctx.fillStyle = PLAYER_COLOR;
-    ctx.fillText(this.name, this.xCoord - 6, this.yCoord - 4);
+    ctx.fillText(this.name, this.xCoord, this.yCoord - 4);
   }
   updateCoord() {
     this.storeInstance.updateCoords(this.playerId, this.xCoord, this.yCoord);
@@ -115,7 +125,7 @@ class Person {
   moveY(dy: number) {
     if (
       this.yCoord + dy < canvas.height - BORDER_SIZE * 2 - this.height / 2 &&
-      this.yCoord + dy > BORDER_SIZE
+      this.yCoord + dy > BORDER_SIZE + 10
     ) {
       this.yCoord += dy;
       this.updateCoord();
@@ -159,5 +169,11 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
   }
   if (e.code === "KeyD") {
     player.moveRight();
+  }
+  if (e.code === "KeyH") {
+    isDrawHeart = true;
+  }
+  if (e.code === "KeyJ") {
+    isDrawHeart = false;
   }
 });
