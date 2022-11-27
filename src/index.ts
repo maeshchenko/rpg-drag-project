@@ -16,6 +16,10 @@ window.onload = init;
 let player: Player;
 let seller: Player;
 let isDrawHeart = false;
+let initialText = "READY PLAYER 1";
+let isTradingEnable = false;
+let isRealisticMode = false;
+
 const storeInstance = Store.getInstance();
 
 function init() {
@@ -34,6 +38,23 @@ function init() {
 
   player = new Player();
   seller = new Seller();
+
+  new Promise((res) =>
+    setTimeout(() => {
+      initialText = "Play with WASD arrows";
+      res("ok!");
+    }, 2000)
+  )
+    .then(() => {
+      setTimeout(() => {
+        initialText = "Good luck!";
+      }, 2000);
+    })
+    .then(() => {
+      setTimeout(() => {
+        initialText = "";
+      }, 2000);
+    });
 
   // Start the first frame request
   window.requestAnimationFrame(gameLoop);
@@ -54,6 +75,15 @@ function draw() {
   if (storeInstance.checkCollisions() || isDrawHeart) {
     drawHeart();
   }
+  if (storeInstance.checkCollisions()) {
+    if (isTradingEnable != true) {
+      isTradingEnable = true;
+    }
+  } else {
+    if (isTradingEnable != false) {
+      isTradingEnable = false;
+    }
+  }
 }
 
 function clear() {
@@ -67,15 +97,19 @@ function clear() {
 }
 
 function drawText() {
-  ctx.font = "48px Joustix";
   ctx.fillStyle = PLAYER_COLOR;
-  ctx.fillText("Ready PLAYER 1", 270, 270);
+  ctx.font = "48px Joustix";
+  ctx.fillText(
+    initialText,
+    canvas.width / 2 - ctx.measureText(initialText).width / 2,
+    270
+  );
 }
 
 function drawHeart() {
-  const base_image = new Image();
-  base_image.src = "assets/images/heart.png";
-  ctx.drawImage(base_image, 30, 30, 25, 25);
+  const heart_image = new Image();
+  heart_image.src = "assets/images/heart.png";
+  ctx.drawImage(heart_image, 30, 30, 25, 25);
 }
 
 class Person {
@@ -84,6 +118,7 @@ class Person {
   width = 0;
   height = 0;
   name = "";
+  frame = 0;
   constructor(
     private playerId: number,
     private color: string,
@@ -101,9 +136,21 @@ class Person {
     return { x: this.xCoord, y: this.yCoord };
   }
   draw() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
-    this.addTextName();
+    if (!isRealisticMode || this.playerId !== 1) {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.xCoord, this.yCoord, this.width, this.height);
+      this.addTextName();
+    } else {
+      const player_image = new Image();
+      player_image.src = `assets/images/player_${this.frame}.png`;
+      ctx.drawImage(
+        player_image,
+        this.xCoord,
+        this.yCoord,
+        this.width + 60,
+        this.height + 60
+      );
+    }
   }
   addTextName() {
     ctx.font = "10px Joustix";
@@ -129,6 +176,11 @@ class Person {
     ) {
       this.yCoord += dy;
       this.updateCoord();
+      if (this.frame === 3) {
+        this.frame = 0;
+      } else {
+        this.frame++;
+      }
     }
   }
   moveUp() {
@@ -175,5 +227,8 @@ document.addEventListener("keypress", (e: KeyboardEvent) => {
   }
   if (e.code === "KeyJ") {
     isDrawHeart = false;
+  }
+  if (e.code === "KeyZ") {
+    isRealisticMode = true;
   }
 });
